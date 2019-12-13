@@ -84,7 +84,6 @@ public class SpeakerRepositoryTest {
 		Speaker speaker = repository.getOne(result.getSpeaker_id());
 		Assertions.assertEquals(speaker.getFirst_name(), "Reda", "First name Should be Martin");
 		Assertions.assertEquals(speaker.getLast_name(), "Ben", "Last Name Should be Fowler");
-
 	}
 
 	@Test
@@ -100,5 +99,4 @@ public class SpeakerRepositoryTest {
 	void DeleteWithFailure() {
 		Assertions.assertThrows(EmptyResultDataAccessException.class, () -> repository.deleteById(1222L));
 	}
-
 }
