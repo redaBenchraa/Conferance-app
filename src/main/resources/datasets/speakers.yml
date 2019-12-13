@@ -1,0 +1,13 @@
+speakers :
+  - speaker_id : 1
+    first_name : Martin
+    last_name : Fowler
+    title : SE
+    company : H
+    speaker_bio : Hey there
+  - speaker_id : 2
+    first_name : Mark
+    last_name : Faw
+    title : LA
+    company : HA
+    speaker_bio : Michel here :D

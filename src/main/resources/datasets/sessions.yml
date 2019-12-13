@@ -1,0 +1,9 @@
+sessions :
+  - session_id : 1
+    session_name : C++
+    session_description : Description
+    session_length : 12
+  - session_id : 2
+    session_name : C
+    session_description : Description 
+    session_length : 24
