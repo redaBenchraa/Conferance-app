@@ -15,7 +15,7 @@ import com.spring.tdd.dtos.SessionDto;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @ActiveProfiles("test")
-public class SessionMapper {
+public class SessionMapperTest {
 
 	@Autowired
 	ModelMapper modelMapper;

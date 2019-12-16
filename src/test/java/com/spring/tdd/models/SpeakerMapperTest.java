@@ -15,7 +15,7 @@ import com.spring.tdd.dtos.SpeakerDto;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @ActiveProfiles("test")
-public class SpeakerMapper {
+public class SpeakerMapperTest {
 
 	@Autowired
 	ModelMapper modelMapper;

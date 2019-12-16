@@ -1,6 +1,1 @@
 language: java
-
-script: "mvn jococo:jococo"
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
