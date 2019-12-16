@@ -104,20 +104,6 @@ public class Speaker {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((company == null) ? 0 : company.hashCode());
-		result = prime * result + ((first_name == null) ? 0 : first_name.hashCode());
-		result = prime * result + ((last_name == null) ? 0 : last_name.hashCode());
-		result = prime * result + ((sessions == null) ? 0 : sessions.hashCode());
-		result = prime * result + ((speaker_bio == null) ? 0 : speaker_bio.hashCode());
-		result = prime * result + ((speaker_id == null) ? 0 : speaker_id.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -126,41 +112,13 @@ public class Speaker {
 		if (getClass() != obj.getClass())
 			return false;
 		Speaker other = (Speaker) obj;
-		if (company == null) {
-			if (other.company != null)
-				return false;
-		} else if (!company.equals(other.company))
-			return false;
-		if (first_name == null) {
-			if (other.first_name != null)
-				return false;
-		} else if (!first_name.equals(other.first_name))
-			return false;
-		if (last_name == null) {
-			if (other.last_name != null)
-				return false;
-		} else if (!last_name.equals(other.last_name))
-			return false;
-		if (sessions == null) {
-			if (other.sessions != null)
-				return false;
-		} else if (!sessions.equals(other.sessions))
-			return false;
-		if (speaker_bio == null) {
-			if (other.speaker_bio != null)
-				return false;
-		} else if (!speaker_bio.equals(other.speaker_bio))
-			return false;
 		if (speaker_id == null) {
-			if (other.speaker_id != null)
+			if (other.speaker_id != null) {
 				return false;
-		} else if (!speaker_id.equals(other.speaker_id))
+			}
+		} else if (!speaker_id.equals(other.speaker_id)) {
 			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
-			return false;
+		}
 		return true;
 	}
 

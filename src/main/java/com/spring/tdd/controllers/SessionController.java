@@ -1,7 +1,6 @@
 package com.spring.tdd.controllers;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,8 @@ public class SessionController {
 		Session newSession = sessionService.save(session);
 		try {
 			return ResponseEntity.created(new URI("/api/v1/sessions/" + newSession.getSession_id())).body(newSession);
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-
 		}
 	}
 

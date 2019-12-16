@@ -1,7 +1,6 @@
 package com.spring.tdd.controllers;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +44,7 @@ public class SpeakerController {
 		Speaker newSpeaker = speakerService.save(speaker);
 		try {
 			return ResponseEntity.created(new URI("/api/v1/speakers/" + newSpeaker.getSpeaker_id())).body(newSpeaker);
-		} catch (URISyntaxException e) {
+		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

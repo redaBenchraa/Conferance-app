@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +38,7 @@ import javassist.NotFoundException;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class SessionControllerTest {
 
 	@MockBean
@@ -55,6 +58,23 @@ public class SessionControllerTest {
 				.andExpect(jsonPath("$.session_name", is("C++")))
 				.andExpect(jsonPath("$.session_description", is("Fundamentals")))
 				.andExpect(jsonPath("$.session_length", is(12)));
+	}
+
+	@Test
+	@DisplayName("Get /speakers ")
+	public void GetSpeakers() throws Exception {
+		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
+		Session mockSession2 = new Session(1L, "C++", "Fundamentals", 12);
+		ArrayList<Session> mockList = new ArrayList<>();
+		mockList.add(mockSession);
+		mockList.add(mockSession2);
+		doReturn(mockList).when(sessionService).findAll();
+		mockMvc.perform(get("/api/v1/sessions"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.[0].session_id", is(1)))
+				.andExpect(jsonPath("$.[0].session_name", is("C++")))
+				.andExpect(jsonPath("$.[0].session_description", is("Fundamentals")))
+				.andExpect(jsonPath("$.[0].session_length", is(12)));
 	}
 
 	@Test
@@ -82,7 +102,7 @@ public class SessionControllerTest {
 	}
 
 	@Test
-	@DisplayName("Post /sessions - Not found")
+	@DisplayName("Post /sessions - Success")
 	public void CreateSession() throws Exception {
 		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
 		Session session = new Session("C++", "Fundamentals", 12);
@@ -99,6 +119,17 @@ public class SessionControllerTest {
 	}
 
 	@Test
+	@DisplayName("Post /sessions - Failure")
+	public void CreateSessionFailure() throws Exception {
+		Session session = new Session("C++", "Fundamentals", 12);
+		doReturn(null).when(sessionService).save(session);
+		mockMvc.perform(post("/api/v1/sessions")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(session)))
+				.andExpect(status().is5xxServerError());
+	}
+
+	@Test
 	@DisplayName("Put /sessions/1 - Success")
 	public void EditSession() throws Exception {
 		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
@@ -112,6 +143,17 @@ public class SessionControllerTest {
 				.andExpect(jsonPath("$.session_name", is("AA")))
 				.andExpect(jsonPath("$.session_description", is("AA")))
 				.andExpect(jsonPath("$.session_length", is(12)));
+	}
+
+	@Test
+	@DisplayName("Put /sessions/1 - Failure")
+	public void EditSessionFailure() throws Exception {
+		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
+		doThrow(NotFoundException.class).when(sessionService).edit(1L, mockSession);
+		mockMvc.perform(put("/api/v1/sessions/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(mockSession)))
+				.andExpect(status().isNotFound());
 	}
 
 	private String toJson(Session session) {

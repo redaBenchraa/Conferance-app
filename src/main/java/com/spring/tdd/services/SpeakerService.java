@@ -27,7 +27,7 @@ public class SpeakerService {
 	}
 
 	public void delete(Long id) throws NotFoundException {
-		if (speakerRepository.findById(id).isPresent()) {
+		if (!speakerRepository.findById(id).isPresent()) {
 			throw new NotFoundException("Speaker does not exist");
 		}
 		speakerRepository.deleteById(id);

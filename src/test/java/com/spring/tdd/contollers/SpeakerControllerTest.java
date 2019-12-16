@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.junit.jupiter.api.DisplayName;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,6 +38,7 @@ import javassist.NotFoundException;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest()
 @AutoConfigureMockMvc
+@ActiveProfiles("test")
 public class SpeakerControllerTest {
 
 	@MockBean
@@ -43,6 +46,23 @@ public class SpeakerControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
+
+	@Test
+	@DisplayName("Get /speakers ")
+	public void GetSpeakers() throws Exception {
+		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
+		Speaker mockSpeaker2 = new Speaker(2L, "Martin", "Fowler", "Engineer", "", "");
+		ArrayList<Speaker> mockList = new ArrayList<>();
+		mockList.add(mockSpeaker);
+		mockList.add(mockSpeaker2);
+		doReturn(mockList).when(speakerService).findAll();
+		mockMvc.perform(get("/api/v1/speakers"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.[0].speaker_id", is(1)))
+				.andExpect(jsonPath("$.[0].first_name", is("Martin")))
+				.andExpect(jsonPath("$.[0].last_name", is("Fowler")))
+				.andExpect(jsonPath("$.[0].title", is("Engineer")));
+	}
 
 	@Test
 	@DisplayName("Get /speakers/1 - Found")
@@ -74,7 +94,7 @@ public class SpeakerControllerTest {
 	}
 
 	@Test
-	@DisplayName("Delete /speakers/1 - NotFound")
+	@DisplayName("Delete /speakers/1 - Failure")
 	public void DeleteSpeakerNotFound() throws Exception {
 		doThrow(new NotFoundException("Speaker does not exist")).when(speakerService).delete(1L);
 		mockMvc.perform(delete("/api/v1/speakers/{id}", 1))
@@ -82,7 +102,7 @@ public class SpeakerControllerTest {
 	}
 
 	@Test
-	@DisplayName("Post /speakers - Not found")
+	@DisplayName("Post /speakers - Success")
 	public void CreateSpeaker() throws Exception {
 		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
 		Speaker speaker = new Speaker("Martin", "Fowler", "Engineer", "", "");
@@ -99,6 +119,17 @@ public class SpeakerControllerTest {
 	}
 
 	@Test
+	@DisplayName("Post /speakers - Failure")
+	public void CreateSessionFailure() throws Exception {
+		Speaker speaker = new Speaker("Martin", "Fowler", "Engineer", "", "");
+		doReturn(null).when(speakerService).save(speaker);
+		mockMvc.perform(post("/api/v1/speakers")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(speaker)))
+				.andExpect(status().is5xxServerError());
+	}
+
+	@Test
 	@DisplayName("Put /speakers/1 - Success")
 	public void EditSpeaker() throws Exception {
 		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
@@ -112,6 +143,17 @@ public class SpeakerControllerTest {
 				.andExpect(jsonPath("$.first_name", is("AA")))
 				.andExpect(jsonPath("$.last_name", is("AA")))
 				.andExpect(jsonPath("$.title", is("Engineer")));
+	}
+
+	@Test
+	@DisplayName("Put /speakers/1 - Failure")
+	public void EditSpeakerFailure() throws Exception {
+		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
+		doThrow(NotFoundException.class).when(speakerService).edit(1L, mockSpeaker);
+		mockMvc.perform(put("/api/v1/speakers/{id}", 1)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(toJson(mockSpeaker)))
+				.andExpect(status().isNotFound());
 	}
 
 	private String toJson(Speaker speaker) {

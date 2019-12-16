@@ -81,18 +81,6 @@ public class Session {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((session_description == null) ? 0 : session_description.hashCode());
-		result = prime * result + ((session_id == null) ? 0 : session_id.hashCode());
-		result = prime * result + ((session_length == null) ? 0 : session_length.hashCode());
-		result = prime * result + ((session_name == null) ? 0 : session_name.hashCode());
-		result = prime * result + ((speakers == null) ? 0 : speakers.hashCode());
-		return result;
-	}
-
-	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -101,31 +89,13 @@ public class Session {
 		if (getClass() != obj.getClass())
 			return false;
 		Session other = (Session) obj;
-		if (session_description == null) {
-			if (other.session_description != null)
-				return false;
-		} else if (!session_description.equals(other.session_description))
-			return false;
 		if (session_id == null) {
-			if (other.session_id != null)
+			if (other.session_id != null) {
 				return false;
-		} else if (!session_id.equals(other.session_id))
+			}
+		} else if (!session_id.equals(other.session_id)) {
 			return false;
-		if (session_length == null) {
-			if (other.session_length != null)
-				return false;
-		} else if (!session_length.equals(other.session_length))
-			return false;
-		if (session_name == null) {
-			if (other.session_name != null)
-				return false;
-		} else if (!session_name.equals(other.session_name))
-			return false;
-		if (speakers == null) {
-			if (other.speakers != null)
-				return false;
-		} else if (!speakers.equals(other.speakers))
-			return false;
+		}
 		return true;
 	}
 
