@@ -16,7 +16,6 @@ public class PostgreConfiguration {
 	public DataSource dataSource() {
 		String url = "jdbc:postgresql://localhost:5432/conference_app";
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
-//		dataSource.setDriverClassName("org.h2.Driver");
 		dataSource.setUrl(url);
 		dataSource.setUsername("postgres");
 		dataSource.setPassword("Welcome");

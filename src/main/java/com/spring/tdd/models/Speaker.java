@@ -2,6 +2,7 @@ package com.spring.tdd.models;
 
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,12 +16,18 @@ public class Speaker {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long speaker_id;
-	private String first_name;
-	private String last_name;
+	@Column(name = "speaker_id")
+	private Long speakerId;
+	@Column(name = "first_name")
+	private String firstName;
+	@Column(name = "last_name")
+	private String lastName;
+	@Column(name = "title")
 	private String title;
+	@Column(name = "company")
 	private String company;
-	private String speaker_bio;
+	@Column(name = "speaker_bio")
+	private String speakerBio;
 	@ManyToMany(mappedBy = "speakers")
 	@JsonIgnore
 	private List<Session> sessions;
@@ -29,22 +36,17 @@ public class Speaker {
 
 	}
 
-	public Speaker(Long speaker_id, String first_name, String last_name, String title, String company,
-			String speaker_bio) {
-		this.speaker_id = speaker_id;
-		this.first_name = first_name;
-		this.last_name = last_name;
-		this.title = title;
-		this.company = company;
-		this.speaker_bio = speaker_bio;
+	public Speaker(Long speakerId, String firstName, String lastName, String title, String company, String speakerBio) {
+		this(firstName, lastName, title, company, speakerBio);
+		this.speakerId = speakerId;
 	}
 
-	public Speaker(String first_name, String last_name, String title, String company, String speaker_bio) {
-		this.first_name = first_name;
-		this.last_name = last_name;
+	public Speaker(String firstName, String lastName, String title, String company, String speakerBio) {
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.title = title;
 		this.company = company;
-		this.speaker_bio = speaker_bio;
+		this.speakerBio = speakerBio;
 	}
 
 	public List<Session> getSessions() {
@@ -55,36 +57,36 @@ public class Speaker {
 		this.sessions = sessions;
 	}
 
-	public Long getSpeaker_id() {
-		return speaker_id;
+	public Long getSpeakerId() {
+		return speakerId;
 	}
 
-	public String getSpeaker_bio() {
-		return speaker_bio;
+	public String getSpeakerBio() {
+		return speakerBio;
 	}
 
-	public void setSpeaker_bio(String speaker_bio) {
-		this.speaker_bio = speaker_bio;
+	public void setSpeakerBio(String speakerBio) {
+		this.speakerBio = speakerBio;
 	}
 
-	public void setSpeaker_id(Long speaker_id) {
-		this.speaker_id = speaker_id;
+	public void setSpeakerId(Long speakerId) {
+		this.speakerId = speakerId;
 	}
 
-	public String getFirst_name() {
-		return first_name;
+	public String getFirstName() {
+		return firstName;
 	}
 
-	public void setFirst_name(String first_name) {
-		this.first_name = first_name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLast_name() {
-		return last_name;
+	public String getLastName() {
+		return lastName;
 	}
 
-	public void setLast_name(String last_name) {
-		this.last_name = last_name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public String getTitle() {
@@ -104,6 +106,14 @@ public class Speaker {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((speakerId == null) ? 0 : speakerId.hashCode());
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -112,12 +122,14 @@ public class Speaker {
 		if (getClass() != obj.getClass())
 			return false;
 		Speaker other = (Speaker) obj;
-		if (speaker_id == null) {
-			if (other.speaker_id != null) {
+		if (speakerId == null) {
+			if (other.speakerId != null) {
 				return false;
 			}
-		} else if (!speaker_id.equals(other.speaker_id)) {
-			return false;
+		} else {
+			if (!speakerId.equals(other.speakerId)) {
+				return false;
+			}
 		}
 		return true;
 	}

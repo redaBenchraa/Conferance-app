@@ -40,7 +40,7 @@ public class SpeakerRepositoryTest {
 	@DisplayName("Test find all")
 	void findAll() {
 		List<Speaker> speakers = repository.findAll();
-		Assertions.assertSame(speakers.size(), 2, "Should have 2 speakers");
+		Assertions.assertSame(2, speakers.size(), "Should have 2 speakers");
 	}
 
 	@Test
@@ -49,11 +49,11 @@ public class SpeakerRepositoryTest {
 		Optional<Speaker> speaker = repository.findById(1L);
 		Assertions.assertTrue(speaker.isPresent(), "Speaker should be present");
 		Speaker s = speaker.get();
-		Assertions.assertEquals(s.getSpeaker_id(), 1, "Id Should be 1");
-		Assertions.assertEquals(s.getFirst_name(), "Martin", "First name Should be Martin");
-		Assertions.assertEquals(s.getLast_name(), "Fowler", "Last Name Should be Fowler");
-		Assertions.assertEquals(s.getCompany(), "H", "Company Should be H");
-		Assertions.assertEquals(s.getTitle(), "SE", "Title Should be SE");
+		Assertions.assertEquals(1, s.getSpeakerId(), "Id Should be 1");
+		Assertions.assertEquals("Martin", s.getFirstName(), "First name Should be Martin");
+		Assertions.assertEquals("Fowler", s.getLastName(), "Last Name Should be Fowler");
+		Assertions.assertEquals("H", s.getCompany(), "Company Should be H");
+		Assertions.assertEquals("SE", s.getTitle(), "Title Should be SE");
 	}
 
 	@Test
@@ -69,9 +69,9 @@ public class SpeakerRepositoryTest {
 		Speaker s = new Speaker(3L, "Reda", "Ben", "", "", "");
 		Speaker result = repository.saveAndFlush(s);
 		Assertions.assertNotNull(result, "Speaker should not be null");
-		Speaker speaker = repository.getOne(result.getSpeaker_id());
-		Assertions.assertEquals(speaker.getFirst_name(), "Reda", "First name Should be Martin");
-		Assertions.assertEquals(speaker.getLast_name(), "Ben", "Last Name Should be Fowler");
+		Speaker speaker = repository.getOne(result.getSpeakerId());
+		Assertions.assertEquals("Reda", speaker.getFirstName(), "First name Should be Martin");
+		Assertions.assertEquals("Ben", speaker.getLastName(), "Last Name Should be Fowler");
 
 	}
 
@@ -81,9 +81,9 @@ public class SpeakerRepositoryTest {
 		Speaker s = new Speaker(3L, "Reda", "Ben", "", "", "");
 		Speaker result = repository.save(s);
 		Assertions.assertNotNull(result, "Speaker should not be null");
-		Speaker speaker = repository.getOne(result.getSpeaker_id());
-		Assertions.assertEquals(speaker.getFirst_name(), "Reda", "First name Should be Martin");
-		Assertions.assertEquals(speaker.getLast_name(), "Ben", "Last Name Should be Fowler");
+		Speaker speaker = repository.getOne(result.getSpeakerId());
+		Assertions.assertEquals("Reda", speaker.getFirstName(), "First name Should be Martin");
+		Assertions.assertEquals("Ben", speaker.getLastName(), "Last Name Should be Fowler");
 	}
 
 	@Test

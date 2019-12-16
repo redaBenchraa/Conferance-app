@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.tdd.dtos.SpeakerDto;
 import com.spring.tdd.models.Speaker;
 import com.spring.tdd.services.SpeakerService;
 
@@ -58,9 +59,9 @@ public class SpeakerControllerTest {
 		doReturn(mockList).when(speakerService).findAll();
 		mockMvc.perform(get("/api/v1/speakers"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.[0].speaker_id", is(1)))
-				.andExpect(jsonPath("$.[0].first_name", is("Martin")))
-				.andExpect(jsonPath("$.[0].last_name", is("Fowler")))
+				.andExpect(jsonPath("$.[0].speakerId", is(1)))
+				.andExpect(jsonPath("$.[0].firstName", is("Martin")))
+				.andExpect(jsonPath("$.[0].lastName", is("Fowler")))
 				.andExpect(jsonPath("$.[0].title", is("Engineer")));
 	}
 
@@ -71,9 +72,9 @@ public class SpeakerControllerTest {
 		doReturn(Optional.of(mockSpeaker)).when(speakerService).findById(1L);
 		mockMvc.perform(get("/api/v1/speakers/{id}", 1))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.speaker_id", is(1)))
-				.andExpect(jsonPath("$.first_name", is("Martin")))
-				.andExpect(jsonPath("$.last_name", is("Fowler")))
+				.andExpect(jsonPath("$.speakerId", is(1)))
+				.andExpect(jsonPath("$.firstName", is("Martin")))
+				.andExpect(jsonPath("$.lastName", is("Fowler")))
 				.andExpect(jsonPath("$.title", is("Engineer")));
 	}
 
@@ -112,9 +113,9 @@ public class SpeakerControllerTest {
 				.content(toJson(speaker)))
 				.andExpect(status().isCreated())
 				.andExpect(header().string(HttpHeaders.LOCATION, "/api/v1/speakers/1"))
-				.andExpect(jsonPath("$.speaker_id", is(1)))
-				.andExpect(jsonPath("$.first_name", is("Martin")))
-				.andExpect(jsonPath("$.last_name", is("Fowler")))
+				.andExpect(jsonPath("$.speakerId", is(1)))
+				.andExpect(jsonPath("$.firstName", is("Martin")))
+				.andExpect(jsonPath("$.lastName", is("Fowler")))
 				.andExpect(jsonPath("$.title", is("Engineer")));
 	}
 
@@ -122,10 +123,11 @@ public class SpeakerControllerTest {
 	@DisplayName("Post /speakers - Failure")
 	public void CreateSessionFailure() throws Exception {
 		Speaker speaker = new Speaker("Martin", "Fowler", "Engineer", "", "");
+		SpeakerDto mockSpeakerDto = new SpeakerDto(1L, "Martin", "Fowler", "Engineer", "", "");
 		doReturn(null).when(speakerService).save(speaker);
 		mockMvc.perform(post("/api/v1/speakers")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(speaker)))
+				.content(toJson(mockSpeakerDto)))
 				.andExpect(status().is5xxServerError());
 	}
 
@@ -134,14 +136,15 @@ public class SpeakerControllerTest {
 	public void EditSpeaker() throws Exception {
 		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
 		Speaker mockEditedspeaker = new Speaker(1L, "AA", "AA", "Engineer", "", "");
+		SpeakerDto mockSpeakerDto = new SpeakerDto(1L, "Martin", "Fowler", "Engineer", "", "");
 		doReturn(mockEditedspeaker).when(speakerService).edit(1L, mockSpeaker);
 		mockMvc.perform(put("/api/v1/speakers/{id}", 1)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(mockSpeaker)))
+				.content(toJson(mockSpeakerDto)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.speaker_id", is(1)))
-				.andExpect(jsonPath("$.first_name", is("AA")))
-				.andExpect(jsonPath("$.last_name", is("AA")))
+				.andExpect(jsonPath("$.speakerId", is(1)))
+				.andExpect(jsonPath("$.firstName", is("AA")))
+				.andExpect(jsonPath("$.lastName", is("AA")))
 				.andExpect(jsonPath("$.title", is("Engineer")));
 	}
 
@@ -149,14 +152,15 @@ public class SpeakerControllerTest {
 	@DisplayName("Put /speakers/1 - Failure")
 	public void EditSpeakerFailure() throws Exception {
 		Speaker mockSpeaker = new Speaker(1L, "Martin", "Fowler", "Engineer", "", "");
+		SpeakerDto mockSpeakerDto = new SpeakerDto(1L, "Martin", "Fowler", "Engineer", "", "");
 		doThrow(NotFoundException.class).when(speakerService).edit(1L, mockSpeaker);
 		mockMvc.perform(put("/api/v1/speakers/{id}", 1)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(mockSpeaker)))
+				.content(toJson(mockSpeakerDto)))
 				.andExpect(status().isNotFound());
 	}
 
-	private String toJson(Speaker speaker) {
+	private String toJson(Object speaker) {
 		try {
 			return new ObjectMapper()
 					.writer()

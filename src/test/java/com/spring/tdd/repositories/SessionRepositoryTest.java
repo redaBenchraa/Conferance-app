@@ -40,7 +40,7 @@ public class SessionRepositoryTest {
 	@DisplayName("Test find all")
 	void findAll() {
 		List<Session> sessions = repository.findAll();
-		Assertions.assertSame(sessions.size(), 2, "Should have 2 sessions");
+		Assertions.assertSame(2, sessions.size(), "Should have 2 sessions");
 	}
 
 	@Test
@@ -49,10 +49,10 @@ public class SessionRepositoryTest {
 		Optional<Session> session = repository.findById(1L);
 		Assertions.assertTrue(session.isPresent(), "Session should be present");
 		Session s = session.get();
-		Assertions.assertEquals(s.getSession_id(), 1, "Id Should be 1");
-		Assertions.assertEquals(s.getSession_length(), 12, "Length Should be 12");
-		Assertions.assertEquals(s.getSession_name(), "C++", "Name Should be C++");
-		Assertions.assertEquals(s.getSession_description(), "Description", "Description Should be Description");
+		Assertions.assertEquals(1, s.getSessionId(), "Id Should be 1");
+		Assertions.assertEquals(12, s.getSessionLength(), "Length Should be 12");
+		Assertions.assertEquals("C++", s.getSessionName(), "Name Should be C++");
+		Assertions.assertEquals("Description", s.getSessionDescription(), "Description Should be Description");
 	}
 
 	@Test
@@ -68,10 +68,10 @@ public class SessionRepositoryTest {
 		Session s = new Session(3L, "Java", "Steams", 22);
 		Session result = repository.saveAndFlush(s);
 		Assertions.assertNotNull(result, "Session should not be null");
-		Session session = repository.getOne(result.getSession_id());
-		Assertions.assertSame(session.getSession_name(), "Java", "Name should be java");
-		Assertions.assertSame(session.getSession_description(), "Steams", "Description should be java");
-		Assertions.assertSame(session.getSession_length(), 22, "Length should be 22");
+		Session session = repository.getOne(result.getSessionId());
+		Assertions.assertSame("Java", session.getSessionName(), "Name should be java");
+		Assertions.assertSame("Steams", session.getSessionDescription(), "Description should be java");
+		Assertions.assertSame(22, session.getSessionLength(), "Length should be 22");
 	}
 
 	@Test
@@ -80,10 +80,10 @@ public class SessionRepositoryTest {
 		Session s = new Session(2L, "Java", "Steams", 22);
 		Session result = repository.save(s);
 		Assertions.assertNotNull(result, "Session should not be null");
-		Session session = repository.getOne(result.getSession_id());
-		Assertions.assertSame(session.getSession_name(), "Java", "Name should be java");
-		Assertions.assertSame(session.getSession_description(), "Steams", "Description should be java");
-		Assertions.assertSame(session.getSession_length(), 22, "Length should be 22");
+		Session session = repository.getOne(result.getSessionId());
+		Assertions.assertSame("Java", session.getSessionName(), "Name should be java");
+		Assertions.assertSame("Steams", session.getSessionDescription(), "Description should be java");
+		Assertions.assertSame(22, session.getSessionLength(), "Length should be 22");
 	}
 
 	@Test

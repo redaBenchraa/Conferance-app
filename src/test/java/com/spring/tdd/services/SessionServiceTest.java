@@ -69,7 +69,7 @@ public class SessionServiceTest {
 
 		List<Session> result = service.findAll();
 
-		Assertions.assertSame(result.size(), mockSessionList.size(), "Shoudl return 2 sessions");
+		Assertions.assertSame(mockSessionList.size(), result.size(), "Shoudl return 2 sessions");
 	}
 
 	@Test
@@ -82,7 +82,7 @@ public class SessionServiceTest {
 		Session result = service.save(mockSession);
 
 		Assertions.assertNotNull(result, "Sessions should not be null");
-		Assertions.assertSame(result.getSession_id(), 1L, "Sessions should have id 1");
+		Assertions.assertSame(1L, result.getSessionId(), "Sessions should have id 1");
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class SessionServiceTest {
 		Session result = service.edit(1L, mockSession);
 
 		Assertions.assertNotNull(result, "Sessions should not be null");
-		Assertions.assertSame(result.getSession_id(), 1L, "Sessions should have id 1");
+		Assertions.assertSame(1L, result.getSessionId(), "Sessions should have id 1");
 	}
 
 	@Test

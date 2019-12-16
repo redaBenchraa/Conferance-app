@@ -30,6 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spring.tdd.dtos.SessionDto;
 import com.spring.tdd.models.Session;
 import com.spring.tdd.services.SessionService;
 
@@ -54,10 +55,10 @@ public class SessionControllerTest {
 		doReturn(Optional.of(mockSession)).when(sessionService).findById(1L);
 		mockMvc.perform(get("/api/v1/sessions/{id}", 1))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.session_id", is(1)))
-				.andExpect(jsonPath("$.session_name", is("C++")))
-				.andExpect(jsonPath("$.session_description", is("Fundamentals")))
-				.andExpect(jsonPath("$.session_length", is(12)));
+				.andExpect(jsonPath("$.sessionId", is(1)))
+				.andExpect(jsonPath("$.sessionName", is("C++")))
+				.andExpect(jsonPath("$.sessionDescription", is("Fundamentals")))
+				.andExpect(jsonPath("$.sessionLength", is(12)));
 	}
 
 	@Test
@@ -71,10 +72,10 @@ public class SessionControllerTest {
 		doReturn(mockList).when(sessionService).findAll();
 		mockMvc.perform(get("/api/v1/sessions"))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.[0].session_id", is(1)))
-				.andExpect(jsonPath("$.[0].session_name", is("C++")))
-				.andExpect(jsonPath("$.[0].session_description", is("Fundamentals")))
-				.andExpect(jsonPath("$.[0].session_length", is(12)));
+				.andExpect(jsonPath("$.[0].sessionId", is(1)))
+				.andExpect(jsonPath("$.[0].sessionName", is("C++")))
+				.andExpect(jsonPath("$.[0].sessionDescription", is("Fundamentals")))
+				.andExpect(jsonPath("$.[0].sessionLength", is(12)));
 	}
 
 	@Test
@@ -112,20 +113,21 @@ public class SessionControllerTest {
 				.content(toJson(session)))
 				.andExpect(status().isCreated())
 				.andExpect(header().string(HttpHeaders.LOCATION, "/api/v1/sessions/1"))
-				.andExpect(jsonPath("$.session_id", is(1)))
-				.andExpect(jsonPath("$.session_name", is("C++")))
-				.andExpect(jsonPath("$.session_description", is("Fundamentals")))
-				.andExpect(jsonPath("$.session_length", is(12)));
+				.andExpect(jsonPath("$.sessionId", is(1)))
+				.andExpect(jsonPath("$.sessionName", is("C++")))
+				.andExpect(jsonPath("$.sessionDescription", is("Fundamentals")))
+				.andExpect(jsonPath("$.sessionLength", is(12)));
 	}
 
 	@Test
 	@DisplayName("Post /sessions - Failure")
 	public void CreateSessionFailure() throws Exception {
 		Session session = new Session("C++", "Fundamentals", 12);
+		SessionDto mockSessionDto = new SessionDto(1L, "C++", "Fundamentals", 12);
 		doReturn(null).when(sessionService).save(session);
 		mockMvc.perform(post("/api/v1/sessions")
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(session)))
+				.content(toJson(mockSessionDto)))
 				.andExpect(status().is5xxServerError());
 	}
 
@@ -134,29 +136,33 @@ public class SessionControllerTest {
 	public void EditSession() throws Exception {
 		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
 		Session mockEditedsession = new Session(1L, "AA", "AA", 12);
+		SessionDto mockSessionDto = new SessionDto(1L, "C++", "Fundamentals", 12);
 		doReturn(mockEditedsession).when(sessionService).edit(1L, mockSession);
 		mockMvc.perform(put("/api/v1/sessions/{id}", 1)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(mockSession)))
+				.accept(MediaType.APPLICATION_JSON)
+				.content(toJson(mockSessionDto)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.session_id", is(1)))
-				.andExpect(jsonPath("$.session_name", is("AA")))
-				.andExpect(jsonPath("$.session_description", is("AA")))
-				.andExpect(jsonPath("$.session_length", is(12)));
+				.andExpect(jsonPath("$.sessionId", is(1)))
+				.andExpect(jsonPath("$.sessionName", is("AA")))
+				.andExpect(jsonPath("$.sessionDescription", is("AA")))
+				.andExpect(jsonPath("$.sessionLength", is(12)));
 	}
 
 	@Test
 	@DisplayName("Put /sessions/1 - Failure")
 	public void EditSessionFailure() throws Exception {
 		Session mockSession = new Session(1L, "C++", "Fundamentals", 12);
+		SessionDto mockSessionDto = new SessionDto(1L, "C++", "Fundamentals", 12);
+
 		doThrow(NotFoundException.class).when(sessionService).edit(1L, mockSession);
 		mockMvc.perform(put("/api/v1/sessions/{id}", 1)
 				.contentType(MediaType.APPLICATION_JSON)
-				.content(toJson(mockSession)))
+				.content(toJson(mockSessionDto)))
 				.andExpect(status().isNotFound());
 	}
 
-	private String toJson(Session session) {
+	private String toJson(Object session) {
 		try {
 			return new ObjectMapper()
 					.writer()

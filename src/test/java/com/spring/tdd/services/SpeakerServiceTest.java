@@ -82,7 +82,7 @@ public class SpeakerServiceTest {
 		Speaker result = service.save(mockSpeaker);
 
 		Assertions.assertNotNull(result, "Speakers should not be null");
-		Assertions.assertSame(result.getSpeaker_id(), 1L, "Speakers should have id 1");
+		Assertions.assertSame(1L, result.getSpeakerId(), "Speakers should have id 1");
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class SpeakerServiceTest {
 		Speaker result = service.edit(1L, mockSpeaker);
 
 		Assertions.assertNotNull(result, "Speakers should not be null");
-		Assertions.assertSame(result.getSpeaker_id(), 1L, "Speakers should have id 1");
+		Assertions.assertSame(1L, result.getSpeakerId(), "Speakers should have id 1");
 	}
 
 	@Test
